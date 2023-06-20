@@ -2,22 +2,20 @@
 
 namespace Game
 {
-    public enum PlayerState
+    [System.Serializable]
+    public enum AttackType
     {
-        Idle,
-        MoveUp,
-        MoveDown,
-        StraightHand,
+        Punch,
         Kick,
-        KnockDown,
+        LowPunch,
     }
     public class GameModel : MonoBehaviour
     {
         [SerializeField] private float playerMoveSpeed = 2f;
-        [SerializeField] private float kickDelay = 1f;
-        [SerializeField] private float punchDelay = 1f;
-        [SerializeField] private float lowPunchDeLay = 1f;
-        [SerializeField] private float gotHitDeLay = 1f;
+        [SerializeField] private float kickDelay = 0.8f;
+        [SerializeField] private float punchDelay = 0.55f;
+        [SerializeField] private float lowPunchDeLay = 0.45f;
+        [SerializeField] private float gotHitDeLay = 0.3f;
         [SerializeField] private float jumpDelay = 1f;
         [SerializeField] private float hookDelay = 1f;
 

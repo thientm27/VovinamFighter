@@ -1,124 +1,153 @@
+using System;
 using System.Collections;
 using DefaultNamespace;
 using Game;
 using UnityEngine;
-using UnityEngine.Serialization;
 
-public class PlayerController : MonoBehaviour
+namespace GameVer2
 {
-    [SerializeField] private GameModel model;
-
-    [SerializeField] private GameView view;
-    // Start is called before the first frame update
-    [SerializeField] private Transform playerTransform;
-
-    // Animation
-    [SerializeField] private Animator animator;
-    [SerializeField] public PlayerState currenPlayer = PlayerState.Idle;
-
-    private bool _isIdle = true;
-
-    // Update is called once per frame
-    void Update()
+    public class PlayerController : MonoBehaviour
     {
-        // move
-        if (!_isIdle)
+        [Header("Scripts references")]
+        [SerializeField] private GameModel model;
+        [SerializeField] private GameView view;
+        [SerializeField] private Player2Controller otherPlayer;
+
+        [Header("Player controll")]
+        [SerializeField] private Transform playerTransform;
+        [SerializeField] private Animator animator;
+    
+        // Hit box
+        [Header("HixBox controller")]
+        [SerializeField] private GameObject punchTrigger;
+        [SerializeField] private GameObject kickTrigger;
+        [SerializeField] private GameObject lowPunchTrigger;
+
+        private bool _isIdle = true;
+
+        // Update is called once per frame
+        void Update()
         {
-            return;
+            // move
+            if (!_isIdle)
+            {
+                return;
+            }
+
+            // Moving
+            var _horizontal = Input.GetAxisRaw(Constants.Horizontal);
+            if (_horizontal != 0)
+            {
+                PlayerOneMove(_horizontal);
+                return;
+            }
+            else
+            {
+                animator.SetBool("MoveUp", false);
+                animator.SetBool("MoveDown", false);
+            }
+        
+
+            if (Input.GetKeyDown(KeyCode.K))
+            {
+                StartCoroutine(Kick(model.KickDelay));
+            }
+            if (Input.GetKeyDown(KeyCode.J))
+            {
+                StartCoroutine(Punch(model.PunchDelay));
+            }
+        
+            if (Input.GetKeyDown(KeyCode.L))
+            {
+                StartCoroutine(LowPunch(model.LowPunchDeLay));
+            }
+        
+            if (Input.GetKeyDown(KeyCode.H))
+            {
+                StartCoroutine(GotHit(model.GotHitDeLay));
+            }
+            // ChangeAnimation(PlayerState.Idle);
         }
 
-        // Moving
-        var _horizontal = Input.GetAxisRaw(Constants.Horizontal);
-        if (_horizontal != 0)
+        private void PlayerOneMove(float _horizontal)
         {
-            PlayerOneMove(_horizontal);
-            return;
-        }
-        else
-        {
-            animator.SetBool("MoveUp", false);
-            animator.SetBool("MoveDown", false);
-        }
-        
+            var newPos = playerTransform.position;
+            newPos.x += _horizontal * Time.deltaTime * model.PlayerMoveSpeed;
+            // Animation
+            if (_horizontal > 0)
+            {
+                animator.SetBool("MoveUp", true);
+            }
+            else
+            {
+                animator.SetBool("MoveDown", true);
+            }
 
-        if (Input.GetKeyDown(KeyCode.K))
-        {
-            StartCoroutine(Kick(model.KickDelay));
+            playerTransform.position = newPos;
         }
-        if (Input.GetKeyDown(KeyCode.J))
+
+        private IEnumerator Kick(float delayTime)
         {
-            StartCoroutine(Punch(model.PunchDelay));
+            _isIdle = false;
+            animator.SetBool("Kick", true);
+            yield return new WaitForSeconds(delayTime/2);
+            kickTrigger.SetActive(true);
+            yield return new WaitForSeconds(delayTime/2);
+            kickTrigger.SetActive(false);
+            animator.SetBool("Kick", false);
+            _isIdle = true;
         }
-        
-        if (Input.GetKeyDown(KeyCode.L))
+        private IEnumerator Punch(float delayTime)
         {
-            StartCoroutine(LowPunch(model.LowPunchDeLay));
+            _isIdle = false;
+            animator.SetBool("Punch", true);
+            yield return new WaitForSeconds(delayTime/2);
+            punchTrigger.SetActive(true);
+            yield return new WaitForSeconds(delayTime/2);
+            punchTrigger.SetActive(false);
+            animator.SetBool("Punch", false);
+            _isIdle = true;
         }
-        
-        if (Input.GetKeyDown(KeyCode.H))
+        private IEnumerator LowPunch(float delayTime)
+        {
+            _isIdle = false;
+            animator.SetBool("LowPunch", true);
+            yield return new WaitForSeconds(delayTime/2);
+            lowPunchTrigger.SetActive(true);
+            yield return new WaitForSeconds(delayTime/2);
+            lowPunchTrigger.SetActive(false);
+            animator.SetBool("LowPunch", false);
+            _isIdle = true;
+        }
+    
+        private IEnumerator GotHit(float delayTime)
+        {
+            _isIdle = false;
+            animator.SetBool("GotHit", true);
+            yield return new WaitForSeconds(delayTime);
+            animator.SetBool("GotHit", false);
+            _isIdle = true;
+        }
+
+        public void GotHitByOther()
         {
             StartCoroutine(GotHit(model.GotHitDeLay));
         }
-        ChangeAnimation(PlayerState.Idle);
-    }
 
-    private void PlayerOneMove(float _horizontal)
-    {
-        var newPos = playerTransform.position;
-        newPos.x += _horizontal * Time.deltaTime * model.PlayerMoveSpeed;
-        // Animation
-        if (_horizontal > 0)
+        public void HandleHitEnemy(AttackType type)
         {
-           animator.SetBool("MoveUp", true);
-        }
-        else
-        {
-            animator.SetBool("MoveDown", true);
-        }
+            Debug.Log("HITTed");
+            otherPlayer.GotHitByOther();
+            switch (type)
+            {
+                case AttackType.Punch:
+                    break;
+                case AttackType.Kick:
+                    break;
+                case AttackType.LowPunch:
+                    break;
 
-        playerTransform.position = newPos;
-    }
-
-    private IEnumerator Kick(float delayTime)
-    {
-        _isIdle = false;
-        animator.SetBool("Kick", true);
-        yield return new WaitForSeconds(delayTime);
-        animator.SetBool("Kick", false);
-        _isIdle = true;
-    }
-    private IEnumerator Punch(float delayTime)
-    {
-        _isIdle = false;
-        animator.SetBool("Punch", true);
-        yield return new WaitForSeconds(delayTime);
-        animator.SetBool("Punch", false);
-        _isIdle = true;
-    }
-    private IEnumerator LowPunch(float delayTime)
-    {
-        _isIdle = false;
-        animator.SetBool("LowPunch", true);
-        yield return new WaitForSeconds(delayTime);
-        animator.SetBool("LowPunch", false);
-        _isIdle = true;
-    }
-    
-    private IEnumerator GotHit(float delayTime)
-    {
-        _isIdle = false;
-        animator.SetBool("GotHit", true);
-        yield return new WaitForSeconds(delayTime);
-        animator.SetBool("GotHit", false);
-        _isIdle = true;
-    }
-    private void ChangeAnimation(PlayerState nameAnim)
-    {
-        if (currenPlayer != nameAnim)
-        {
-            animator.ResetTrigger(currenPlayer.ToString());
-            animator.SetTrigger(nameAnim.ToString());
-            currenPlayer = nameAnim;
+            }
         }
     }
 }
