@@ -1,17 +1,16 @@
 using System.Collections;
-using System.Collections.Generic;
 using DefaultNamespace;
 using Game;
 using UnityEngine;
+using UnityEngine.Serialization;
 
-public class GameControllerV2 : MonoBehaviour
+public class PlayerController : MonoBehaviour
 {
     [SerializeField] private GameModel model;
 
     [SerializeField] private GameView view;
-
     // Start is called before the first frame update
-    [SerializeField] private Transform playerOne;
+    [SerializeField] private Transform playerTransform;
 
     // Animation
     [SerializeField] private Animator animator;
@@ -65,7 +64,7 @@ public class GameControllerV2 : MonoBehaviour
 
     private void PlayerOneMove(float _horizontal)
     {
-        var newPos = playerOne.position;
+        var newPos = playerTransform.position;
         newPos.x += _horizontal * Time.deltaTime * model.PlayerMoveSpeed;
         // Animation
         if (_horizontal > 0)
@@ -77,7 +76,7 @@ public class GameControllerV2 : MonoBehaviour
             animator.SetBool("MoveDown", true);
         }
 
-        playerOne.position = newPos;
+        playerTransform.position = newPos;
     }
 
     private IEnumerator Kick(float delayTime)
