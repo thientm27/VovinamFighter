@@ -1,8 +1,7 @@
-using System;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
-namespace School
+namespace GameVer2
 {
     public class GameController : MonoBehaviour
     {
@@ -10,7 +9,7 @@ namespace School
         {
             if (Input.GetKeyDown(KeyCode.F1))
             {
-                SceneManager.LoadScene(Constants.SceneGamePlay);
+                SceneManager.LoadScene(Constants.SceneSchool);
             }
         }
     }

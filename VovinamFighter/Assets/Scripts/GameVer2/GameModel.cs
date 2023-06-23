@@ -1,6 +1,6 @@
 ﻿using UnityEngine;
 
-namespace Game
+namespace GameVer2
 {
     [System.Serializable]
     public enum AttackType

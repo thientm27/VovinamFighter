@@ -1,7 +1,5 @@
-using Game;
 using UnityEngine;
 using UnityEngine.Events;
-using UnityEngine.Serialization;
 
 namespace GameVer2.AttackTrigger
 {

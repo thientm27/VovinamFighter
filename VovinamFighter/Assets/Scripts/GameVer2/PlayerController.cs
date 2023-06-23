@@ -1,7 +1,5 @@
 using System;
 using System.Collections;
-using DefaultNamespace;
-using Game;
 using UnityEngine;
 
 namespace GameVer2
