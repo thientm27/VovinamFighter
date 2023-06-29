@@ -1,6 +1,8 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Events;
 
 public class CharController : MonoBehaviour
 {
@@ -24,6 +26,7 @@ public class CharController : MonoBehaviour
     private bool _canMove = true;
     private bool _isPause = false;
     private bool _isJump = false;
+
 
     void Start()
     {
@@ -143,7 +146,7 @@ public class CharController : MonoBehaviour
     }
 
 
-    private void PauseGame()
+    public void PauseGame()
     {
         Cursor.lockState = CursorLockMode.None;
         Cursor.visible = true;
@@ -151,7 +154,7 @@ public class CharController : MonoBehaviour
         _isPause = true;
     }
 
-    private void ResumeGame()
+    public void ResumeGame()
     {
         Cursor.lockState = CursorLockMode.Locked;
         Cursor.visible = false;
@@ -180,4 +183,7 @@ public class CharController : MonoBehaviour
         playerAnimator.SetBool("WalkToward", false);
         playerAnimator.SetBool("WalkBack", false);
     }
+
+  
+    
 }
