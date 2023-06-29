@@ -1,6 +1,7 @@
 using System;
 using System.Collections;
 using UnityEngine;
+using UnityEngine.Events;
 
 namespace GameVer2
 {
@@ -8,9 +9,8 @@ namespace GameVer2
     {
         [Header("Scripts references")]
         [SerializeField] private GameModel model;
-        [SerializeField] private GameView view;
         [SerializeField] private Player2Controller otherPlayer;
-
+        [SerializeField] private UnityEvent<int> hitOtherPlayer;
         [Header("Player controll")]
         [SerializeField] private Transform playerTransform;
         [SerializeField] private Animator animator;
@@ -22,10 +22,21 @@ namespace GameVer2
         [SerializeField] private GameObject lowPunchTrigger;
 
         private bool _isIdle = true;
+        public bool IsPause { get; set; }
+        private Vector3 originPos;
+
+        private void Awake()
+        {
+            originPos = playerTransform.position;
+        }
 
         // Update is called once per frame
         void Update()
         {
+            if (IsPause)
+            {
+                return;
+            }
             // move
             if (!_isIdle)
             {
@@ -121,6 +132,8 @@ namespace GameVer2
         private IEnumerator GotHit(float delayTime)
         {
             _isIdle = false;
+            animator.SetBool("MoveDown", false);
+            animator.SetBool("MoveUp", false);
             animator.SetBool("GotHit", true);
             yield return new WaitForSeconds(delayTime);
             animator.SetBool("GotHit", false);
@@ -130,11 +143,14 @@ namespace GameVer2
         public void GotHitByOther()
         {
             StartCoroutine(GotHit(model.GotHitDeLay));
+            var newPos = playerTransform.position;
+            newPos.x -=  model.FallBackOffset;
+            playerTransform.position = newPos;
         }
 
         public void HandleHitEnemy(AttackType type)
         {
-            Debug.Log("HITTed");
+            hitOtherPlayer.Invoke(0);
             otherPlayer.GotHitByOther();
             switch (type)
             {
@@ -146,6 +162,11 @@ namespace GameVer2
                     break;
 
             }
+        }
+
+        public void ResetPos()
+        {
+            playerTransform.position = originPos;
         }
     }
 }

@@ -18,7 +18,10 @@ namespace GameVer2
         [SerializeField] private float gotHitDeLay = 0.3f;
         [SerializeField] private float jumpDelay = 1f;
         [SerializeField] private float hookDelay = 1f;
+        [SerializeField] private float fallBackOffset = 1f;
+        [SerializeField] private int mathtime = 60;
 
+        public int Mathtime => mathtime;
 
         public float PlayerMoveSpeed => playerMoveSpeed;
 
@@ -33,5 +36,6 @@ namespace GameVer2
         public float JumpDelay => jumpDelay;
 
         public float HookDelay => hookDelay;
+        public float FallBackOffset => fallBackOffset;
     }
 }
