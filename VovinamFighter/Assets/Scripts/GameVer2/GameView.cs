@@ -12,13 +12,19 @@ namespace GameVer2
         [SerializeField] private TextMeshProUGUI player2Score;
         [SerializeField] private GameObject startGamePopup;
 
-        private int _timer;
+        [Header("Win popup")]
+        [SerializeField] private GameObject winPopup;
+        [SerializeField] private TextMeshProUGUI winText;
+
+        private int timer;
         private IEnumerator timerCountDown;
 
+       
         public void ShowStartGamePopup(bool isActive = true)
         {
             startGamePopup.SetActive(isActive);
         }
+
         public void UpdatePlayerScore(int index, int score)
         {
             if (index == 0)
@@ -30,11 +36,17 @@ namespace GameVer2
                 player2Score.text = score.ToString();
             }
         }
-        
+
+        public void ShowWinner(string message, bool isActive = true)
+        {
+            winPopup.SetActive(isActive);
+            winText.text = message;
+        }
+
         public void StartTimerGame(int gameTime, UnityAction callback)
         {
-            _timer = gameTime;
-            timerGame.text = _timer.ToString();
+            timer = gameTime;
+            timerGame.text = timer.ToString();
             timerCountDown = StartTimeCount(callback);
             StartCoroutine(timerCountDown);
         }
@@ -43,15 +55,20 @@ namespace GameVer2
         {
             StopCoroutine(timerCountDown);
         }
-        private IEnumerator StartTimeCount( UnityAction callback)
+
+        private IEnumerator StartTimeCount(UnityAction callback)
         {
-            while (_timer > 0)
+         
+            while (timer > 0)
             {
-                _timer--;
+                timer--;
                 yield return new WaitForSeconds(1);
-                timerGame.text = _timer.ToString();
+                timerGame.text = timer.ToString();
+                if (timer <= 0)
+                {
+                    callback?.Invoke();
+                }
             }
         }
-        
     }
 }

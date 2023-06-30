@@ -1,7 +1,7 @@
 using UnityEngine;
 using UnityEngine.Events;
 
-namespace GameVer2.AttackTrigger
+namespace GameVer2.Models
 {
     public class TriggerAttack : MonoBehaviour
     {

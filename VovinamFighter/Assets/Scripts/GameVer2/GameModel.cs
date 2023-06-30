@@ -1,4 +1,5 @@
 ﻿using UnityEngine;
+using UnityEngine.Serialization;
 
 namespace GameVer2
 {
@@ -9,6 +10,7 @@ namespace GameVer2
         Kick,
         LowPunch,
     }
+
     public class GameModel : MonoBehaviour
     {
         [SerializeField] private float playerMoveSpeed = 2f;
@@ -19,9 +21,11 @@ namespace GameVer2
         [SerializeField] private float jumpDelay = 1f;
         [SerializeField] private float hookDelay = 1f;
         [SerializeField] private float fallBackOffset = 1f;
-        [SerializeField] private int mathtime = 60;
+        [SerializeField] private int matchtime = 60;
+        [SerializeField] private int matchWinScore = 20;
 
-        public int Mathtime => mathtime;
+        public int Matchtime => matchtime;
+        public int MatchWinScore => matchWinScore;
 
         public float PlayerMoveSpeed => playerMoveSpeed;
 

@@ -33,6 +33,8 @@ namespace GameVer2
         {
             if (IsPause)
             {
+                animator.SetBool("MoveUp", false);
+                animator.SetBool("MoveDown", false);
                 return;
             }
             // move
